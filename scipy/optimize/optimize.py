@@ -15,7 +15,8 @@
 #      cubic-interpolation (Mar. 2004)
 
 from __future__ import division, print_function, absolute_import
-#test ex
+
+# test ex
 # Minimization routines
 
 __all__ = ['fmin', 'fmin_powell', 'fmin_bfgs', 'fmin_lbfgs', 'fmin_olbfgs', 'fmin_lnaq', 'fmin_ncg', 'fmin_cg',
@@ -2416,7 +2417,8 @@ def _minimize_bfgs(fun, x0, args=(), jac=None, callback=None,
         result['allvecs'] = allvecs
     return result
 
-def _minimize_mnaq(fun, x0, args=(), jac=None, callback=None,mu=0.95,
+
+def _minimize_mnaq(fun, x0, args=(), jac=None, callback=None, mu=0.95,
                    gtol=1e-5, norm=Inf, eps=_epsilon, maxiter=None,
                    disp=False, return_all=False,
                    **unknown_options):
@@ -2465,7 +2467,7 @@ def _minimize_mnaq(fun, x0, args=(), jac=None, callback=None,mu=0.95,
     Hk = I
     err_plot = []
     vk = numpy.zeros(N)
-    #mu = 0.01
+    # mu = 0.01
     sigma = 0.02
     xk = xk + mu * vk
     # Sets the initial step guess to dx ~ 1
@@ -2499,20 +2501,20 @@ def _minimize_mnaq(fun, x0, args=(), jac=None, callback=None,mu=0.95,
             RHS = f(wmuv) + 1e-3 * numpy.dot(gfk.T, pk)
             if LHS <= RHS:
                 lamda_k = 1
-            else: 
-                #first iter
+            else:
+                # first iter
                 if k == 0:
                     L = 100
                     old_old_fval = LHS + np.linalg.norm(gfk) / 2
                     lamda_k, fc, gc, old_fval, old_old_fval, gfkp1 = \
                         _line_search_wolfe12(f, myfprime, wmuv, pk, gfk,
                                              LHS, old_old_fval, amin=1e-100, amax=1e100)
-                    
+
                 else:
-                    L = 100*(vecnorm(yk, ord=norm) / vecnorm(sk, ord=norm))
+                    L = 100 * (vecnorm(yk, ord=norm) / vecnorm(sk, ord=norm))
                     Qk = L * numpy.eye(N)
                     pkQ = numpy.sqrt(numpy.dot(pk.T, numpy.dot(Qk, pk)))
-                    lamda_k = -(delta* numpy.dot(gfk.T, pk)) / numpy.square(pkQ)
+                    lamda_k = -(delta * numpy.dot(gfk.T, pk)) / numpy.square(pkQ)
 
         except _LineSearchError:
             # Line search failed to find a better solution.
@@ -2530,13 +2532,13 @@ def _minimize_mnaq(fun, x0, args=(), jac=None, callback=None,mu=0.95,
         sk = xkp1 - wmuv
         xk = xkp1
         vk = vkp1
-        gfkp1 = myfprime(xkp1) 
+        gfkp1 = myfprime(xkp1)
         yk = gfkp1 - gfk
         gfk = gfkp1
         if callback is not None:
             callback(xk)
 
-        #gnorm = vecnorm(gfk, ord=norm)
+        # gnorm = vecnorm(gfk, ord=norm)
         p_times_q = np.dot(sk.T, yk)
         if gnorm > 1e-2:
             const = 2.0
@@ -2547,7 +2549,7 @@ def _minimize_mnaq(fun, x0, args=(), jac=None, callback=None,mu=0.95,
             zeta = const - (p_times_q / (p_times_p * gnorm))
         else:
             zeta = const
-        yk = yk + zeta * gnorm * sk #with global convergence term
+        yk = yk + zeta * gnorm * sk  # with global convergence term
 
         if (gnorm <= gtol):
             break
@@ -2577,7 +2579,7 @@ def _minimize_mnaq(fun, x0, args=(), jac=None, callback=None,mu=0.95,
                                                      sk[numpy.newaxis, :])
         k += 1
     fval = f(xkp1)
-    #fval = old_fval
+    # fval = old_fval
     if np.isnan(fval):
         # This can happen if the first call to f returned NaN;
         # the loop is then never entered.
@@ -2605,7 +2607,6 @@ def _minimize_mnaq(fun, x0, args=(), jac=None, callback=None,mu=0.95,
     if retall:
         result['allvecs'] = allvecs
     return result
-
 
 
 #######################################################################################################################
@@ -2708,7 +2709,7 @@ def _minimize_adaQN(fun, x0, args=(), jac=None, callback=None,
                 sk_vec.clear()
                 yk_vec.clear()
                 if clearF: F.clear()
-                #print("Clearing buffers")
+                # print("Clearing buffers")
                 wk = wo_bar
                 flag_ret = 0
             if flag_ret:
@@ -3047,7 +3048,7 @@ def _minimize_adaNAQ(fun, x0, args=(), jac=None, callback=None,
 def _minimize_adaNAQ(fun, x0, args=(), jac=None, callback=None,
                      gtol=1e-5, norm=Inf, eps=1e-4, maxiter=None,
                      disp=False, return_all=False, wo_bar_vec=None, ws_vec=None, vo_bar_vec=None, vs_vec=None,
-                     vk_vec=None, L=5,err=None,
+                     vk_vec=None, L=5, err=None,
                      mu_val=None, mu_fac=1.01, mu_init=0.1, mu_clip=0.99, clearF=True, reset=False, dirNorm=True,
                      iter=None, alpha_k=1.0, sk_vec=None, yk_vec=None, F=None, t_vec=None, gamma=1.01, old_fun_val=None,
                      memF=None, memL=None, timeLapse=[],
@@ -3167,7 +3168,7 @@ def _minimize_adaNAQ(fun, x0, args=(), jac=None, callback=None,
                 mu = np.minimum(mu / mu_fac, mu_clip)
                 mu = np.maximum(mu, mu_init)
                 if clearF: F.clear()
-                #print("Clearing buffers")
+                # print("Clearing buffers")
                 wk = wo_bar
                 vk = vo_bar
                 flag_ret = 0
@@ -3604,6 +3605,68 @@ def _minimize_olnaq(fun, x0, args=(), jac=None, callback=None,
 
     return result
 
+def _outloop_lookahead(fun, x0, args=(), jac=None, callback=None,
+                    gtol=1e-5, norm=Inf, eps=_epsilon, maxiter=None,
+                    disp=False, return_all=False,
+                    alpha_k=0.8,slow_w_save=None,
+                    dirNorm=True,
+                    **unknown_options):
+
+
+    _check_unknown_options(unknown_options)
+    f = fun
+    fprime = jac
+    epsilon = eps
+    retall = return_all
+
+    func_calls, f = wrap_function(f, args)
+    if fprime is None:
+        grad_calls, myfprime = wrap_function(approx_fprime, (f, epsilon))
+    else:
+        grad_calls, myfprime = wrap_function(fprime, args)
+
+    '''
+    x0,xk,xkp1:重み
+    myfprime():勾配計算
+    slow_w:低速の重み
+    fast_w:高速の重み
+    
+    '''
+    #パラメータの整形
+    xk = asarray(x0).flatten()
+
+    #パラメータ表示数
+    k=len(slow_w_save)
+    if k == 0:
+        print("Parameters: ", len(xk))
+        slow_w_save.append(xk)
+
+
+    else:
+        #高速の重みに重みを代入
+        fast_w=xk
+        fast_w=fast_w.reshape(-1,1)
+
+        #低速の重みを更新
+        slow_w = asarray(slow_w_save).flatten()
+        slow_w = slow_w.reshape(-1, 1)
+        slow_w=slow_w + alpha_k * (fast_w - slow_w)
+
+        #高速の重みに代入
+        fast_w=slow_w
+        xk = fast_w
+        slow_w_save.append(xk)
+
+    if callback is not None:
+        callback(xk)
+    k += 1
+
+    result = OptimizeResult(fun=0, jac=0, hess_inv=0, nfev=0,
+                            njev=0, status=0,
+                            success=(0), message=0, x=xk,
+                            nit=k)
+
+    return result
 
 '''
 def _minimize_adam(fun, x0, args=(), jac=None, callback=None,
@@ -6493,6 +6556,7 @@ def show_options(solver=None, method=None, disp=True):
             ('molnaq', 'scipy.optimize.optimize._minimize_molnaq'),
             ('lnaq', 'scipy.optimize.optimize._minimize_lnaq'),
             ('olnaq', 'scipy.optimize.optimize._minimize_olnaq'),
+            ('outloop_lookahead', 'scipy.optimize.optimize._outloop_lookahead'),
             ('solnaq', 'scipy.optimize.optimize._minimize_solnaq'),
             ('adam', 'scipy.optimize.optimize._minimize_adam'),
             ('adaQN', 'scipy.optimize.optimize._minimize_adaQN'),
