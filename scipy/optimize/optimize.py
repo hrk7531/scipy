@@ -3556,12 +3556,20 @@ def _minimize_olnaq(fun, x0, args=(), jac=None, callback=None,
     else:
         grad_calls, myfprime = wrap_function(fprime, args)
 
+#ここから
+    k = len(sk_vec)
+    if k == 0:
+        print("Parameters: ", len(xk))
+
     vk = vk_vec[0]
     k = len(sk_vec)
     if k == 0:
         print("Parameters: ", len(xk))
 
+    xk = xk.reshape(-1, 1)
+
     gfk = myfprime(xk + mu * vk)
+    gfk = gfk.reshape(-1, 1)
     pk = -gfk
     a = []
     idx = min(k, m)
@@ -3587,9 +3595,11 @@ def _minimize_olnaq(fun, x0, args=(), jac=None, callback=None,
     xkp1 = xk + vkp1
     sk = xkp1 - (xk + mu * vk)
     vk_vec.append(vkp1)
+
     sk_vec.append(sk)
 
     gfkp1 = myfprime(xkp1)
+    gfkp1 = gfkp1.reshape(-1,1)
     yk = gfkp1 - gfk + sk
     yk_vec.append(yk)
     xk = xkp1
